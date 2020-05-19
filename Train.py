@@ -14,13 +14,14 @@ import numpy as np
 import argparse
 from imutils import paths
 import random
+from keras.callbacks import EarlyStopping
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-d", "--dataset", required=True, help="halloo insert dataset")
 ap.add_argument("-m", "--model", required=True, help="path to output model")
 args = vars(ap.parse_args())
 size = 50
-ep = 2000
+ep = 100
 dpt = 3
 classes = 4
 
@@ -72,7 +73,8 @@ model = IncludeNet.build(width=size, height=size, depth=dpt, classes=classes)
 model.compile(loss="categorical_crossentropy", optimizer=opt, metrics=["accuracy"])
 
 print("[INFO] training network...")
-H = model.fit(trainX, trainY, validation_data=(testX, testY), batch_size=size, epochs=ep, verbose=1)
+es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=50)
+H = model.fit(trainX, trainY, validation_data=(testX, testY), batch_size=size, epochs=ep, verbose=1, callbacks=[es])
 print("Saving network")
 model.save(f'./SavedModel/{args["model"]}')
 print("Network have been saved")
