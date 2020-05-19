@@ -19,11 +19,17 @@ from keras.callbacks import EarlyStopping
 ap = argparse.ArgumentParser()
 ap.add_argument("-d", "--dataset", required=True, help="halloo insert dataset")
 ap.add_argument("-m", "--model", required=True, help="path to output model")
+ap.add_argument("-e", "--epoches", required=True, help="how many epoches?")
+ap.add_argument("-l", "--learningRate", required=False, help="provide learning rate", default=0.025)
+ap.add_argument("-mn", "--momentum", required=False, help="provide momentum", default= 0.4)
 args = vars(ap.parse_args())
 size = 50
-ep = 100
+ep = int(args["epoches"])
 dpt = 3
 classes = 4
+lr= float(args["learningRate"])
+momentum=float(args["momentum"])
+
 
 print("[INFO] loading Images")
 imagePaths = list(paths.list_images(args["dataset"]))
@@ -68,7 +74,7 @@ print('trainX: ', trainX.shape, ', trainY: ', trainY.shape, ', testX: ', testX.s
 #print('trainX: ', trainX.shape, ', trainY: ', trainY.shape, ', testX: ', testX.shape,', testY: ', testY.shape, )
 
 print("[INFO] compiling model...")
-opt = SGD(lr=0.025, momentum=0.4)
+opt = SGD(lr=lr, momentum=momentum)
 model = IncludeNet.build(width=size, height=size, depth=dpt, classes=classes)
 model.compile(loss="categorical_crossentropy", optimizer=opt, metrics=["accuracy"])
 
