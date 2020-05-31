@@ -24,6 +24,7 @@ class SimpleDatasetLoader:
                     for p in self.preprocessors:
                         image = p.preprocess(image)
                 cv2.imwrite('../PreProcessor/PreImages/'+str(i)+'.jpg', image)
+                cv2.waitKey(0)
                 data.append(image)
                 labels.append(label)
                 if verbose > 0 and i > 0 and (i + 1) % verbose == 0:

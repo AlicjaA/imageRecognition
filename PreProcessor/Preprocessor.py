@@ -65,8 +65,3 @@ class SimplePreprocessor:
         mask = np.zeros(image.shape, np.uint8)
         cv2.drawContours(mask, [biggest_contour], -1, 255, -1)
         return biggest_contour, mask
-
-    def overlay_mask(self, mask, image):
-        rgb_mask = cv2.cvtColor(mask, cv2.COLOR_GRAY2RGB)
-        img = cv2.addWeighted(rgb_mask, 0.5, image, 0.5, 0)
-        # show(img)
