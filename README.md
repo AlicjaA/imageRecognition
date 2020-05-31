@@ -2,15 +2,13 @@
 ### Train and save trained model
 Use this command to train the model and save model
 ```bash
-python3 Train.py -d dataset/TRAIN -m sample.hdf5
+ python3 training.py -m 3_ep.hdf5 -e 3 -df data2.pkl -lf label2.pkl -l 0.025 -mn 0.4 >> Logging/3_ep.txt
 ```
-after of train you will see result plot:
-![Image of Yaktocat](train_result.png)
 
 ### Test the model
 - copy TEST forlder from downloaded dataset to dataset directory
 - run this command
 ```bash
-python3 test_model.py -d dataset/TEST -m SavedModel/150_epoch_model.hdf5
+python3 test_model.py -d dataset/TEST -lf testlabels.pkl -df datatest2.pkl -lf labeltest2.pkl -m SavedModel/3_ep.hdf5 >> Logging/3_test.txt
 ```
 
