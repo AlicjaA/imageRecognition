@@ -1,29 +1,26 @@
 from sklearn.preprocessing import LabelBinarizer
-#from sklearn.preprocessing import OneHotEncoder
-#import sys
-#from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
-from Utils.ImageTools import ImageToArrayPreprocessor
-from PrePorcessor.Preprocessor import SimplePreprocessor
-from dataset.SimpleDatasetLoader import SimpleDatasetLoader
-from keras.utils import to_categorical
 from Model.IncludeNet import IncludeNet
 from keras.optimizers import SGD
 import matplotlib.pyplot as plt
 import numpy as np
 import argparse
-from imutils import paths
 import random
 from keras.callbacks import EarlyStopping
+import pickle
+
+
+
 
 def main():
 
 	ap = argparse.ArgumentParser()
-	ap.add_argument("-d", "--dataset", required=True, help="halloo insert 	dataset")
 	ap.add_argument("-m", "--model", required=True, help="path to output model")
 	ap.add_argument("-e", "--epoches", required=True, help="how many epoches?")
 	ap.add_argument("-l", "--learningRate", required=False, help="provide learning rate", default=0.025)
 	ap.add_argument("-mn", "--momentum", required=False, help="provide momentum", default= 0.4)
+	ap.add_argument("-df", "--dataFile", required=False, help="provide data serializing file name", default='data.pkl')
+	ap.add_argument("-lf", "--labelsFile", required=False, help="provide label serializing file name", default='labels.pkl')
 	args = vars(ap.parse_args())
 	size = 50
 	ep = int(args["epoches"])
@@ -32,15 +29,9 @@ def main():
 	lr= float(args["learningRate"])
 	momentum=float(args["momentum"])
 
+	data = pickle.load(open(f'./PreProcessor/PreProcessedData/' + args["dataFile"], 'rb'))
+	labels = pickle.load(open(f'./PreProcessor/PreProcessedData/' + args["labelsFile"], 'rb'))
 
-	print("[INFO] loading Images")
-	imagePaths = list(paths.list_images(args["dataset"]))
-	#while '.ipynb_checkpoints' in imagePaths: imagePaths.remove('.ipynb_checkpoints')
-	imagePaths[:] = [x for x in imagePaths if '.ipynb_checkpoints' not in x]
-	sp = SimplePreprocessor(size, size)
-	iap = ImageToArrayPreprocessor()
-	sdl = SimpleDatasetLoader(preprocessors=[sp, iap])
-	(data, labels) = sdl.load(imagePaths, verbose=-1)
 	#np.set_printoptions(threshold=sys.maxsize)
 
 	for_shuffle = list(zip(data,labels ))
